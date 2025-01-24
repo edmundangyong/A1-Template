@@ -3,6 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,26 +12,40 @@ public class Main {
     private static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
-        System.out.println("** Starting Maze Runner");
+        logger.info("** Starting Maze Runner");
+
+        Options options = new Options();
+        options.addOption("i", "input", true, "Path to the input maze file");
+        CommandLineParser parser = new DefaultParser();
+
         try {
-            System.out.println("**** Reading the maze from file " + args[0]);
-            BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+            CommandLine cmd = parser.parse(options, args);
+
+            if (!cmd.hasOption("i")) {
+                throw new IllegalArgumentException("/!\\ An error has occured /!\\");
+            }
+
+            String filePath = cmd.getOptionValue("i");
+            logger.info("**** Reading the maze from file " + filePath);
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String line;
             while ((line = reader.readLine()) != null) {
                 for (int idx = 0; idx < line.length(); idx++) {
                     if (line.charAt(idx) == '#') {
-                        System.out.print("WALL ");
+                        logger.trace("WALL ");
                     } else if (line.charAt(idx) == ' ') {
-                        System.out.print("PASS ");
+                        logger.trace("PASS ");
                     }
                 }
-                System.out.print(System.lineSeparator());
+                logger.trace(System.lineSeparator());
             }
+        } catch (ParseException e) {
+            logger.error("/!\\ An error has occured /!\\");
         } catch(Exception e) {
-            System.err.println("/!\\ An error has occured /!\\");
+            logger.error("/!\\ An error has occured /!\\");
         }
-        System.out.println("**** Computing path");
-        System.out.println("PATH NOT COMPUTED");
-        System.out.println("** End of MazeRunner");
+        logger.info("**** Computing path");
+        logger.error("PATH NOT COMPUTED");
+        logger.info("** End of MazeRunner");
     }
 }
