@@ -51,3 +51,30 @@ public class Main {
         logger.info("** End of MazeRunner");
     }
 }
+
+class Player {
+    
+    private int[] position = new int[2];
+    private char direction;
+
+    public Player(int[] position) {
+        this.position = position;
+        if (position[1] == 0) {
+            this.direction = 'E';
+        } else {
+            this.direction = 'W';
+        }
+    }
+
+    void input(char c) {
+    }
+
+    int[] getPosition() {
+        return this.position;
+    }
+
+    char getDirection() {
+        return this.direction;
+    }
+
+}
