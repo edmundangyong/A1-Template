@@ -107,7 +107,6 @@ class MazeReader {
                         maze[i][idx] = 0;
                     }
                 }
-                System.out.print(System.lineSeparator());
                 i++;
             }
             reader.close();
