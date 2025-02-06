@@ -15,7 +15,6 @@ public class Main {
     public static void main(String[] args) {
 
         logger.info("** Starting Maze Runner");
-
         logger.trace("**** Computing path");
         logger.info("PATH NOT COMPUTED");
         logger.info("** End of MazeRunner");
@@ -27,7 +26,7 @@ class Player {
     private int[] position = new int[2];
     private char direction;
 
-    public Player(int[] position) {
+    public void start(int[] position) {
         this.position = position;
         if (position[1] == 0) {
             this.direction = 'E';
@@ -37,6 +36,56 @@ class Player {
     }
 
     void input(char c) {
+        switch (c) {
+            case 'F':
+                switch (this.direction) {
+                    case 'N':
+                        this.position[0] -= 1;
+                        break;
+                    case 'E':
+                        this.position[1] += 1;
+                        break;
+                    case 'S':
+                        this.position[0] += 1;
+                        break;
+                    case 'W':
+                        this.position[1] -= 1;
+                        break;
+                }
+                break;
+            case 'R':
+                switch (this.direction) {
+                    case 'N':
+                        this.direction = 'E';
+                        break;
+                    case 'E':
+                        this.direction = 'S';
+                        break;
+                    case 'S':
+                        this.direction = 'W';
+                        break;
+                    case 'W':
+                        this.direction = 'N';
+                        break;
+                }
+                break;
+            case 'L':
+                switch (this.direction) {
+                    case 'N':
+                        this.direction = 'W';
+                        break;
+                    case 'E':
+                        this.direction = 'N';
+                        break;
+                    case 'S':
+                        this.direction = 'E';
+                        break;
+                    case 'W':
+                        this.direction = 'S';
+                        break;
+                }
+                break;
+        }
     }
 
     int[] getPosition() {
@@ -119,7 +168,6 @@ class MazeReader {
     }
 }
 
-
 class Maze {
     private int rows = 0;
     private int columns = 0;
@@ -135,4 +183,37 @@ class Maze {
         this.entry = entry;
         this.exit = exit;
     }
+
+    public int getRows() {
+        return this.rows;
+    }
+
+    public int getColumns() {
+        return this.columns;
+    }
+
+    public int[][] getMaze() {
+        return this.grid;
+    }
+
+    public int[] getEntry() {
+        return this.entry;
+    }
+
+    public int[] getExit() {
+        return this.exit;
+    }
+
+    public int check(int row, int column) {
+        return this.grid[row][column];
+    }
+}
+
+class MazeSolver {
+    Player player1 = new Player();
+
+    public MazeSolver(Maze grid) {
+        player1.start(grid.getEntry());
+    }
+
 }
