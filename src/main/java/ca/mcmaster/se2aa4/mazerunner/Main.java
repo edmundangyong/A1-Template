@@ -51,11 +51,8 @@ class Player {
 
 class MazeReader {
     private static final Logger logger = LogManager.getLogger();
-    private int rows = 0;
-    private int columns = 0;
-    private int[][] maze;
-    private int[] entry = new int[2];
-    private int[] exit = new int[2];
+
+    private Maze maze1 = new Maze();
     
     public MazeReader(String[] args) {
         Options options = new Options();
@@ -75,53 +72,67 @@ class MazeReader {
             
             BufferedReader loader = new BufferedReader(new FileReader(file_path));
             String line;
+            int rows = 0;
+            int columns = 0;
             while ((line = loader.readLine()) != null) {
-                if (this.rows == 0) {
-                    this.columns = line.length();
+                if (rows == 0) {
+                    columns = line.length();
                 }
-                this.rows += 1;
+                rows += 1;
             }
             loader.close();
 
-            this.maze = new int[rows][columns];
+            int[][] grid = new int[rows][columns];
 
             BufferedReader reader = new BufferedReader(new FileReader(file_path));
             int i = 0;
+            int[] entry = new int[2];
+            int[] exit = new int[2];
             while ((line = reader.readLine()) != null) {
                 for (int idx = 0; idx < line.length(); idx++) {
                     if (idx == 0 && line.charAt(idx) == ' ') {
-                        this.entry[0] = i;
-                        this.entry[1] = idx;
-                        // System.out.print("ENTR ");
-                        maze[i][idx] = 0;
+                        entry[0] = i;
+                        entry[1] = idx;
+                        grid[i][idx] = 0;
                     } else if (idx == (columns - 1) && line.charAt(idx) == ' ') {
-                        this.entry[0] = i;
-                        this.entry[1] = idx;
-                        // System.out.print("EXIT ");
-                        maze[i][idx] = 0;
+                        exit[0] = i;
+                        exit[1] = idx;
+                        grid[i][idx] = 0;
                     } else if (line.charAt(idx) == '#') {
-                        // System.out.print("WALL ");
-                        maze[i][idx] = 1;
+                        grid[i][idx] = 1;
                     } else if (line.charAt(idx) == ' ') {
-                        // System.out.print("PASS ");
-                        maze[i][idx] = 0;
+                        grid[i][idx] = 0;
                     }
                 }
                 i++;
             }
             reader.close();
+            maze1.update(rows, columns, grid, entry, exit);
 
         } catch(Exception e) {
             logger.error("/!\\ An error has occured /!\\");
         }
     }
 
-    public int[] getEntry() {
-        return this.entry;
+    public Maze getMaze() {
+        return maze1;
     }
-    
-    public int[] getExit() {
-        return this.exit;
-    }
+}
 
+
+class Maze {
+    private int rows = 0;
+    private int columns = 0;
+    private int[][] grid;
+    private int[] entry = new int[2];
+    private int[] exit = new int[2];
+
+    public void update(int rows, int columns, int[][] grid, int[] entry, int[] exit) {
+        this.rows = rows;
+        this.columns = columns;
+        this.grid = new int[rows][columns];
+        this.grid = grid;
+        this.entry = entry;
+        this.exit = exit;
+    }
 }
