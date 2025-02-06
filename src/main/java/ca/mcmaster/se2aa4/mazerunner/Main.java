@@ -16,36 +16,6 @@ public class Main {
 
         logger.info("** Starting Maze Runner");
 
-        
-        Options options = new Options();
-        options.addOption("i", true, "path to input maze file");
-        CommandLineParser parser = new DefaultParser();
-        
-        try {
-            CommandLine cmd = parser.parse(options, args);
-
-            if (!cmd.hasOption("i")) {
-                logger.error("/!\\ An error has occured /!\\");
-            }
-
-            String file_path = cmd.getOptionValue("i");
-
-            logger.trace("**** Reading the maze from file " + file_path);
-            BufferedReader reader = new BufferedReader(new FileReader(file_path));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                for (int idx = 0; idx < line.length(); idx++) {
-                    if (line.charAt(idx) == '#') {
-                        System.out.print("WALL ");
-                    } else if (line.charAt(idx) == ' ') {
-                        System.out.print("PASS ");
-                    }
-                }
-                System.out.print(System.lineSeparator());
-            }
-        } catch(Exception e) {
-            logger.error("/!\\ An error has occured /!\\");
-        }
         logger.trace("**** Computing path");
         logger.info("PATH NOT COMPUTED");
         logger.info("** End of MazeRunner");
@@ -77,4 +47,59 @@ class Player {
         return this.direction;
     }
 
+}
+
+class MazeReader {
+    private static final Logger logger = LogManager.getLogger();
+    private int rows = 0;
+    private int columns = 0;
+    private int[][] maze;
+    
+    public MazeReader(String[] args) {
+        Options options = new Options();
+        options.addOption("i", true, "path to input maze file");
+        CommandLineParser parser = new DefaultParser();
+        
+        try {
+            CommandLine cmd = parser.parse(options, args);
+
+            if (!cmd.hasOption("i")) {
+                logger.error("/!\\ An error has occured /!\\");
+            }
+
+            String file_path = cmd.getOptionValue("i");
+
+            logger.trace("**** Reading the maze from file " + file_path);
+            
+            BufferedReader reader = new BufferedReader(new FileReader(file_path));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (this.rows == 0) {
+                    this.columns = line.length();
+                }
+                this.rows += 1;
+            }
+            reader.close();
+
+            this.maze = new int[rows][columns];
+
+            BufferedReader reader2 = new BufferedReader(new FileReader(file_path));
+            int i = 0;
+            while ((line = reader2.readLine()) != null) {
+                for (int idx = 0; idx < line.length(); idx++) {
+                    if (line.charAt(idx) == '#') {
+                        System.out.print("WALL ");
+                        maze[i][idx] = 1;
+                    } else if (line.charAt(idx) == ' ') {
+                        System.out.print("PASS ");
+                        maze[i][idx] = 0;
+                    }
+                }
+                System.out.print(System.lineSeparator());
+                i++;
+            }
+        } catch(Exception e) {
+            logger.error("/!\\ An error has occured /!\\");
+        }
+    }
 }
