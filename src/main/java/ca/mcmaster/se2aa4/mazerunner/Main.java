@@ -45,9 +45,9 @@ public class Main {
         logger.trace("**** Computing path");
 
         if (maze_path != "") {
-            logger.info(solver.check(maze_path));
+            solver.check(maze_path);
         } else {
-            logger.info(solver.solveRightHand());
+            System.out.println(solver.solveRightHand());
         }
 
         logger.info("** End of MazeRunner");
@@ -312,9 +312,25 @@ class MazeSolver {
         return solution;
     }
     
-    public boolean check(String path) {
-        boolean valid = true;
-        return valid;
+    public void check(String path) {
+        for (int i = 0; i < path.length(); i++) {
+            if (path.charAt(i) != ' ') {
+                this.player1.input(path.charAt(i));
+            }
+            if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1]) == 1) {
+                logger.warn("Collided with wall, ignoring last move");
+                this.player1.input('R');
+                this.player1.input('R');
+                this.player1.input('F');
+                this.player1.input('R');
+                this.player1.input('R');
+            }
+        }
+        if (this.player1.getPosition()[0] == this.grid.getExit()[0] && this.player1.getPosition()[1] == this.grid.getExit()[1]) {
+            System.out.println("correct path");
+        } else {
+            System.out.println("incorrect path");
+        }
     }
 
 }
