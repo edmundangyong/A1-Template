@@ -47,7 +47,7 @@ public class Main {
         if (maze_path != "") {
             logger.info(solver.check(maze_path));
         } else {
-            logger.info(solver.solve());
+            logger.info(solver.solveRightHand());
         }
 
         logger.info("** End of MazeRunner");
@@ -239,13 +239,76 @@ class Maze {
 class MazeSolver {
     private static final Logger logger = LogManager.getLogger();
     Player player1 = new Player();
+    Maze grid = new Maze();
 
     public MazeSolver(Maze grid) {
-        player1.start(grid.getEntry());
+        this.grid = grid;
+        this.player1.start(grid.getEntry());
     }
 
-    public String solve() {
-        String solution = "solution";
+    public String solveRightHand() {
+        String solution = "";
+        while (this.player1.getPosition()[0] != this.grid.getExit()[0] || this.player1.getPosition()[1] != this.grid.getExit()[1]) {
+            switch (this.player1.getDirection()) {
+                case 'N':
+                    if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 0) {
+                        player1.input('R');
+                        solution += "R";
+                        player1.input('F');
+                        solution += "F";
+                    } else if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 1 && this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 1) {
+                        player1.input('L');
+                        solution += "L";
+                    } else {
+                        player1.input('F');
+                        solution += "F";
+                    }
+                    break;
+                case 'E':
+                    if (this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 0) {
+                        player1.input('R');
+                        solution += "R";
+                        player1.input('F');
+                        solution += "F";
+                    } else if (this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 1 && this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 1) {
+                        player1.input('L');
+                        solution += "L";
+                    } else {
+                        player1.input('F');
+                        solution += "F";
+                    }
+                    break;
+                case 'S':
+                    if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 0) {
+                        player1.input('R');
+                        solution += "R";
+                        player1.input('F');
+                        solution += "F";
+                    } else if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 1 && this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 1) {
+                        player1.input('L');
+                        solution += "L";
+                    } else {
+                        player1.input('F');
+                        solution += "F";
+                    }
+                    break;
+                case 'W':
+                    if (this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 0) {
+                        player1.input('R');
+                        solution += "R";
+                        player1.input('F');
+                        solution += "F";
+                    } else if (this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 1 && this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 1) {
+                        player1.input('L');
+                        solution += "L";
+                    } else {
+                        player1.input('F');
+                        solution += "F";
+                    }
+                    break;
+            }
+        // logger.info(this.player1.getPosition()[0] + " " + this.player1.getPosition()[1] + " " + this.player1.getDirection() + " " + this.grid.getExit()[0] + " " + this.grid.getExit()[1] + " " + solution);
+        }
         return solution;
     }
     
