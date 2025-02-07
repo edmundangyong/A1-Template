@@ -35,6 +35,8 @@ public class Main {
                 maze_path = cmd.getOptionValue("p");
             }
             
+        } catch(ParseException e) {
+            logger.error("/!\\ Error parsing command line arguments /!\\");
         } catch(Exception e) {
             logger.error("/!\\ An error has occured /!\\");
         }
@@ -42,11 +44,11 @@ public class Main {
         MazeReader reader = new MazeReader(file_path);
         MazeSolver solver = new MazeSolver(reader.getMaze());
 
-        logger.trace("**** Computing path");
-
         if (maze_path != "") {
+            logger.trace("**** Checking path");
             System.out.println(solver.check(maze_path));
         } else {
+            logger.trace("**** Computing path");
             Factorizer convert = new Factorizer();
             String solution = solver.solveRightHand();
             System.out.println("Canonical form: " + solution);
@@ -214,14 +216,6 @@ class Maze {
         this.exit = exit;
     }
 
-    public int getRows() {
-        return this.rows;
-    }
-
-    public int getColumns() {
-        return this.columns;
-    }
-
     public int[][] getMaze() {
         return this.grid;
     }
@@ -310,7 +304,7 @@ class MazeSolver {
                     }
                     break;
             }
-        // logger.info(this.player1.getPosition()[0] + " " + this.player1.getPosition()[1] + " " + this.player1.getDirection() + " " + this.grid.getExit()[0] + " " + this.grid.getExit()[1] + " " + solution);
+        // logger.trace(this.player1.getPosition()[0] + " " + this.player1.getPosition()[1] + " " + this.player1.getDirection() + " " + this.grid.getExit()[0] + " " + this.grid.getExit()[1] + " " + solution);
         }
         return solution;
     }
@@ -321,7 +315,9 @@ class MazeSolver {
             if (path.charAt(i) != ' ') {
                 this.player1.input(path.charAt(i));
             }
-            if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1]) == 1) {
+            if (this.player1.getPosition()[1] < 0 || this.player1.getPosition()[1] > this.grid.getExit()[1]) {
+                logger.error("/!\\ Out of bounds /!\\");
+            } else if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1]) == 1) {
                 logger.warn("Collided with wall, ignoring last move");
                 this.player1.input('R');
                 this.player1.input('R');
@@ -359,9 +355,9 @@ class Factorizer {
             }
         }
         if (repeat > 1) {
-            factorized += "" + repeat + solution.charAt(solution.length() - 1);;
+            factorized += "" + repeat + solution.charAt(solution.length() - 1);
         } else {
-            factorized += "" + solution.charAt(solution.length() - 1);;
+            factorized += "" + solution.charAt(solution.length() - 1);
         }
         return factorized;
     }
