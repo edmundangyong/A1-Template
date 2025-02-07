@@ -15,14 +15,47 @@ public class Main {
     public static void main(String[] args) {
 
         logger.info("** Starting Maze Runner");
+
+        Options options = new Options();
+        options.addOption("i", true, "path to input maze file");
+        options.addOption("p", true, "maze path to check");
+        CommandLineParser parser = new DefaultParser();
+
+        String file_path = "";
+        String maze_path = "";
+
+        try {
+            CommandLine cmd = parser.parse(options, args);
+            if (!cmd.hasOption("i")) {
+                logger.error("/!\\ An error has occured /!\\");
+            }
+            file_path = cmd.getOptionValue("i");
+
+            if (cmd.hasOption("p")) {
+                maze_path = cmd.getOptionValue("p");
+            }
+            
+        } catch(Exception e) {
+            logger.error("/!\\ An error has occured /!\\");
+        }
+
+        MazeReader reader = new MazeReader(file_path);
+        MazeSolver solver = new MazeSolver(reader.getMaze());
+
         logger.trace("**** Computing path");
-        logger.info("PATH NOT COMPUTED");
+
+        if (maze_path != "") {
+            logger.info(solver.check(maze_path));
+        } else {
+            logger.info(solver.solve());
+        }
+
         logger.info("** End of MazeRunner");
     }
 }
 
 class Player {
-    
+    private static final Logger logger = LogManager.getLogger();
     private int[] position = new int[2];
     private char direction;
 
@@ -100,22 +133,11 @@ class Player {
 
 class MazeReader {
     private static final Logger logger = LogManager.getLogger();
-
     private Maze maze1 = new Maze();
     
-    public MazeReader(String[] args) {
-        Options options = new Options();
-        options.addOption("i", true, "path to input maze file");
-        CommandLineParser parser = new DefaultParser();
+    public MazeReader(String file_path) {
         
         try {
-            CommandLine cmd = parser.parse(options, args);
-
-            if (!cmd.hasOption("i")) {
-                logger.error("/!\\ An error has occured /!\\");
-            }
-
-            String file_path = cmd.getOptionValue("i");
 
             logger.trace("**** Reading the maze from file " + file_path);
             
@@ -142,17 +164,22 @@ class MazeReader {
                     if (idx == 0 && line.charAt(idx) == ' ') {
                         entry[0] = i;
                         entry[1] = idx;
+                        // System.out.print("ENTR ");
                         grid[i][idx] = 0;
                     } else if (idx == (columns - 1) && line.charAt(idx) == ' ') {
                         exit[0] = i;
                         exit[1] = idx;
+                        // System.out.print("EXIT ");
                         grid[i][idx] = 0;
                     } else if (line.charAt(idx) == '#') {
                         grid[i][idx] = 1;
+                        // System.out.print("WALL ");
                     } else if (line.charAt(idx) == ' ') {
                         grid[i][idx] = 0;
+                        // System.out.print("PASS ");
                     }
                 }
+                // System.out.print(System.lineSeparator());
                 i++;
             }
             reader.close();
@@ -210,10 +237,21 @@ class Maze {
 }
 
 class MazeSolver {
+    private static final Logger logger = LogManager.getLogger();
     Player player1 = new Player();
 
     public MazeSolver(Maze grid) {
         player1.start(grid.getEntry());
+    }
+
+    public String solve() {
+        String solution = "solution";
+        return solution;
+    }
+    
+    public boolean check(String path) {
+        boolean valid = true;
+        return valid;
     }
 
 }
