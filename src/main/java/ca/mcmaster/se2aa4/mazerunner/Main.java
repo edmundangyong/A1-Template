@@ -45,9 +45,12 @@ public class Main {
         logger.trace("**** Computing path");
 
         if (maze_path != "") {
-            solver.check(maze_path);
+            System.out.println(solver.check(maze_path));
         } else {
-            System.out.println(solver.solveRightHand());
+            Factorizer convert = new Factorizer();
+            String solution = solver.solveRightHand();
+            System.out.println("Canonical form: " + solution);
+            System.out.println("Factorized form: " + convert.factorize(solution));
         }
 
         logger.info("** End of MazeRunner");
@@ -312,7 +315,8 @@ class MazeSolver {
         return solution;
     }
     
-    public void check(String path) {
+    public String check(String path) {
+        String result = "";
         for (int i = 0; i < path.length(); i++) {
             if (path.charAt(i) != ' ') {
                 this.player1.input(path.charAt(i));
@@ -327,10 +331,38 @@ class MazeSolver {
             }
         }
         if (this.player1.getPosition()[0] == this.grid.getExit()[0] && this.player1.getPosition()[1] == this.grid.getExit()[1]) {
-            System.out.println("correct path");
+            result = "correct path";
         } else {
-            System.out.println("incorrect path");
+            result = "incorrect path";
         }
+        return result;
     }
 
+}
+
+class Factorizer {
+    public static String factorize(String solution) {
+        String factorized = "";
+        int repeat = 0;
+        char last = 'F';
+        for (int i = 0; i < solution.length(); i++) {
+            if (solution.charAt(i) == last) {
+                repeat += 1;
+            } else if (repeat > 1) {
+                factorized +=  "" + repeat + solution.charAt(i - 1) + " ";
+                last = solution.charAt(i);
+                repeat = 1;
+            } else {
+                factorized +=  "" + solution.charAt(i - 1) + " ";
+                last = solution.charAt(i);
+                repeat = 1;
+            }
+        }
+        if (repeat > 1) {
+            factorized += "" + repeat + solution.charAt(solution.length() - 1);;
+        } else {
+            factorized += "" + solution.charAt(solution.length() - 1);;
+        }
+        return factorized;
+    }
 }
