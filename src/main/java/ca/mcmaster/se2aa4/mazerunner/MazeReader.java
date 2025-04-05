@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 class MazeReader {
     private static final Logger logger = LogManager.getLogger();
-    private Maze maze1 = new Maze();
+    private Maze maze = Maze.getInstance();
     
     public MazeReader(String file_path) {
         
@@ -58,7 +58,7 @@ class MazeReader {
                 i++;
             }
             reader.close();
-            maze1.update(rows, columns, grid, entry, exit);
+            maze.update(rows, columns, grid, entry, exit);
 
         } catch(Exception e) {
             logger.error("/!\\ An error has occured /!\\");
@@ -66,6 +66,6 @@ class MazeReader {
     }
 
     public Maze getMaze() {
-        return maze1;
+        return maze;
     }
 }

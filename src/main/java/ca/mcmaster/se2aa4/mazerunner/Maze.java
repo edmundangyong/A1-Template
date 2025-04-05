@@ -1,6 +1,15 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
 public class Maze {
+    private static Maze instance;
+    private Maze() {}
+    public static Maze getInstance() {
+        if (instance == null) {
+            instance = new Maze();
+        }
+        return instance;
+    }
+
     private int[][] grid;
     private int[] entry = new int[2];
     private int[] exit = new int[2];
