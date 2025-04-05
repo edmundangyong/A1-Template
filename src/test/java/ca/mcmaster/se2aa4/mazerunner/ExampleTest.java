@@ -6,11 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExampleTest {
 
     @Test
-    public void sampleTest() {
-        assertTrue(1 == 1);
-    }
-
-    @Test
     public void entryTest() {
         MazeReader reader = new MazeReader("./examples/small.maz.txt");
 
@@ -92,4 +87,11 @@ public class ExampleTest {
         assertTrue(solver.checkPath(path).equals("incorrect path"));
     }
 
+    @Test
+    public void singletonTest() {
+        Maze maze1 = Maze.getInstance();
+        Maze maze2 = Maze.getInstance();
+
+        assertTrue(maze1 == maze2);
+    }
 }
