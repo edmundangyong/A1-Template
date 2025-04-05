@@ -13,70 +13,9 @@ public class MazeSolver {
         this.player1.start(grid.getEntry());
     }
 
-    public String solveRightHand() {
-        String solution = "";
-        while (this.player1.getPosition()[0] != this.grid.getExit()[0] || this.player1.getPosition()[1] != this.grid.getExit()[1]) {
-            switch (this.player1.getDirection()) {
-                case NORTH:
-                    if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 1 && this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 0) {
-                        player1.input('F');
-                        solution += "F";
-                    } else if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 1 && this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 1) {
-                        player1.input('L');
-                        solution += "L";
-                    } else if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 0) {
-                        player1.input('R');
-                        solution += "R";
-                        player1.input('F');
-                        solution += "F";
-                    }
-                    break;
-                case EAST:
-                    if (this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 1 && this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 0) {
-                        player1.input('F');
-                        solution += "F";
-                    } else if (this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 1 && this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] + 1) == 1) {
-                        player1.input('L');
-                        solution += "L";
-                    } else if (this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 0) {
-                        player1.input('R');
-                        solution += "R";
-                        player1.input('F');
-                        solution += "F";
-                    }
-                    break;
-                case SOUTH:
-                    if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 1 && this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 0) {
-                        player1.input('F');
-                        solution += "F";
-                    } else if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 1 && this.grid.check(this.player1.getPosition()[0] + 1, this.player1.getPosition()[1]) == 1) {
-                        player1.input('L');
-                        solution += "L";
-                    } else if (this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 0) {
-                        player1.input('R');
-                        solution += "R";
-                        player1.input('F');
-                        solution += "F";
-                    }
-                    break;
-                case WEST:
-                    if (this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 1 && this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 0) {
-                        player1.input('F');
-                        solution += "F";
-                    } else if (this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 1 && this.grid.check(this.player1.getPosition()[0], this.player1.getPosition()[1] - 1) == 1) {
-                        player1.input('L');
-                        solution += "L";
-                    } else if (this.grid.check(this.player1.getPosition()[0] - 1, this.player1.getPosition()[1]) == 0) {
-                        player1.input('R');
-                        solution += "R";
-                        player1.input('F');
-                        solution += "F";
-                    }
-                    break;
-            }
-        // logger.info(this.player1.getPosition()[0] + " " + this.player1.getPosition()[1] + " " + this.player1.getDirection() + " " + this.grid.getExit()[0] + " " + this.grid.getExit()[1] + " " + solution);
-        }
-        return solution;
+    public String findPath() {
+        MazeSolverStrategy strategy = new RightHandStrategy(grid);
+        return strategy.findPath();
     }
     
     public String checkPath(String path) {

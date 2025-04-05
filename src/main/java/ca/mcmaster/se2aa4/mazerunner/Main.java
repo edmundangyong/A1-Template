@@ -39,7 +39,6 @@ public class Main {
         }
 
         MazeReader reader = new MazeReader(file_path);
-        logger.info("DONE READING");
         MazeSolver solver = new MazeSolver(reader.getMaze());
 
         if (maze_path != "") {
@@ -47,7 +46,7 @@ public class Main {
             System.out.println(solver.checkPath(maze_path));
         } else {
             logger.trace("**** Computing path");
-            String solution = solver.solveRightHand();
+            String solution = solver.findPath();
             System.out.println("\nCanonical form: " + solution);
             System.out.println("\nFactorized form: " + Factorizer.factorize(solution) + "\n");
         }
